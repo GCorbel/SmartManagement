@@ -1,0 +1,9 @@
+<script type="text/ng-template" id="row">
+  <tr>
+    <% model_class.columns.each do |column| %>
+       <td><%= rest_manager_row(column) %></td>
+    <% end %>
+   <td><a href="javascript:" ng-click="showEdit(row)">Edit</a></td>
+   <td><a href="javascript:" ng-click="deleteEntry(row)">Delete</a></td>
+  </tr>
+</script>
