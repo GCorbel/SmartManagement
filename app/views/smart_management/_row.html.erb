@@ -1,6 +1,6 @@
 <script type="text/ng-template" id="row">
   <tr>
-    <% model_class.columns.each do |column| %>
+    <% visible_columns.each do |column| %>
        <td><%= rest_manager_row(column) %></td>
     <% end %>
    <td><a href="javascript:" ng-click="showEdit(row)">Edit</a></td>
