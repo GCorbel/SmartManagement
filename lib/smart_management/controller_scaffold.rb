@@ -1,41 +1,43 @@
 module SmartManagement
   module ControllerScaffold
+    include SmartManagement::Helpers
+
     def index
       respond_to do |format|
         format.html { render 'index' }
         format.json do
           render json: SmartManagement::IndexBuilder.
-            new(User, smart_management_options).call
+            new(model_class, smart_management_options).call
         end
       end
     end
 
     def show
-      respond_with(user)
+      respond_with(resource)
     end
 
     def create
-      user.save
-      respond_with(user)
+      resource.save
+      respond_with(resource)
     end
 
     def update
-      if user.save
-        render json: user, status: :ok
+      if resource.save
+        render json: resource, status: :ok
       else
         render json: { errors: resource.errors }, status: :unprocessable_entity
       end
     end
 
     def destroy
-      user.destroy
-      respond_with(user)
+      resource.destroy
+      respond_with(resource)
     end
 
     private
 
-    def user_params
-      params.require(:user).permit(:name, :age, :company_id)
+    def resource_attributes
+      params.require(singular_model_name.to_sym).permit(editable_columns.map(&:to_sym))
     end
 
     def sort_options
@@ -62,11 +64,23 @@ module SmartManagement
     private
 
     def self.included(controller)
+      controller.decent_configuration do
+        strategy DecentExposure::StrongParametersStrategy
+      end
+
       name = controller.controller_name
       singular = name.singularize
-      controller.expose(name)
-      controller.expose(singular, attributes: "#{singular}_params")
+      controller.expose(name, attributes: :resource_attributes)
+      controller.expose(singular, attributes: :resource_attributes)
+      controller.respond_to :html, :json
     end
 
+    def _prefixes
+      super << 'smart_management'
+    end
+
+    def resource
+      @resource ||= send(singular_model_name)
+    end
   end
 end
