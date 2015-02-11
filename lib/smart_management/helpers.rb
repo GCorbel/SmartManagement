@@ -19,7 +19,9 @@ module SmartManagement
     end
 
     def editable_columns
-      model_class.column_names - UNEDITABLE_COLUMNS
+      model_class.columns.delete_if do |column|
+        UNEDITABLE_COLUMNS.include?(column.name)
+      end
     end
 
     def singular_model_name
@@ -39,11 +41,11 @@ module SmartManagement
     end
 
     def field_for(form:, klass:, column:)
-      if klass.reflect_on_association(assoc_name(column))
-        form.send(:association, assoc_name(column),
-                  ng: { model: "editedResource.#{column}" } )
+      if klass.reflect_on_association(assoc_name(column.name))
+        form.send(:association, assoc_name(column.name),
+                  ng: { model: "editedResource.#{column.name}" } )
       else
-        form.send(:input, column, ng: { model: "editedResource.#{column}" } )
+        form.send(:input, column.name, ng: { model: "editedResource.#{column.name}" } )
       end
     end
 
