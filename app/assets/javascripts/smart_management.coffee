@@ -1,4 +1,7 @@
-app = angular.module('management', ['smart-table', 'restangular'])
+app = angular.module('smart_management', ['smart-table', 'restangular'])
+
+$(document).on 'page:load', ->
+  angular.bootstrap $("[ng-app='#{app.name}']"), ['smart_management']
 
 app.factory('RestManager', =>
   class RestManager
@@ -107,3 +110,4 @@ app.controller "sortCtrl", [
 app.directive "managerRow", ->
   replace: true
   template: $('#row').text()
+
