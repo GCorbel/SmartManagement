@@ -2,14 +2,18 @@
 <thead>
   <tr>
     <% visible_columns.each do |column| %>
-      <th st-sort="<%= column %>"><%= column.humanize.capitalize %></th>
+      <th st-sort="<%= column.name %>"><%= column.name.humanize.capitalize %></th>
     <% end %>
     <th></th>
     <th></th>
   </tr>
   <tr>
     <% visible_columns.each do |column| %>
-      <td><input st-search="'<%= column %>'"/></td>
+      <td>
+        <% if searchable?(column) %>
+          <input st-search="'<%= column.name %>'"/>
+        <% end %>
+      </td>
     <% end %>
   </tr>
 </thead>

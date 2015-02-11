@@ -1,9 +1,9 @@
 module SmartManagement
   module Helpers
     UNEDITABLE_COLUMNS = ['id', 'created_at', 'updated_at']
+    UNSEARCHABLE_TYPES = [:string, :text]
 
-    def rest_manager_row(column_name)
-      column = model_class.columns_hash[column_name]
+    def rest_manager_row(column)
       if column.sql_type == 'datetime'
         filter = " | date: 'dd-MM-yyyy hh:mm:ss'"
       end
@@ -11,7 +11,11 @@ module SmartManagement
     end
 
     def visible_columns
-      model_class.column_names
+      model_class.columns
+    end
+
+    def visible_columns_names
+      visible_columns.map(&:name)
     end
 
     def editable_columns
@@ -41,6 +45,10 @@ module SmartManagement
       else
         form.send(:input, column, ng: { model: "editedResource.#{column}" } )
       end
+    end
+
+    def searchable?(column)
+      UNSEARCHABLE_TYPES.include?(column.type)
     end
 
     private
