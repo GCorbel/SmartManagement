@@ -3,7 +3,7 @@
 <div ng-controller="sortCtrl" ng-app="management"
   data-singular-model-name = "<%= singular_model_name %>"
   data-plural-model-name = "<%= plural_model_name %>"
-  data-editable-columns="<%= editable_columns.join(',') %>"
+  data-editable-columns="<%= editable_columns_names.join(',') %>"
   data-visible-columns="<%= visible_columns_names.join(',') %>">
 
   <%= render 'smart_management/form' %>

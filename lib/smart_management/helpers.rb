@@ -24,6 +24,10 @@ module SmartManagement
       end
     end
 
+    def editable_columns_names
+      editable_columns.map(&:name)
+    end
+
     def singular_model_name
       controller_name.to_s.singularize
     end
