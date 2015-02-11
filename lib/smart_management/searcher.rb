@@ -7,7 +7,9 @@ module SmartManagement
 
     def call
       if @options.present?
-        @options.each { |k, v| @data = @data.where("#{k} like ?", "%#{v}%") }
+        @options.each do |k, v|
+          @data = @data.where("#{@data.table_name}.#{k} like ?", "%#{v}%")
+        end
       end
       @data
     end
