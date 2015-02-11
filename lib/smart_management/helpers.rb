@@ -19,7 +19,7 @@ module SmartManagement
     end
 
     def editable_columns
-      model_class.columns.delete_if do |column|
+      model_class.columns.reject do |column|
         UNEDITABLE_COLUMNS.include?(column.name)
       end
     end
