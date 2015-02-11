@@ -3,7 +3,7 @@ module SmartManagement
     UNEDITABLE_COLUMNS = ['id', 'created_at', 'updated_at']
     UNSEARCHABLE_TYPES = [:string, :text]
 
-    def rest_manager_row(column)
+    def smart_management_row(column)
       if column.sql_type == 'datetime'
         filter = " | date: 'dd-MM-yyyy hh:mm:ss'"
       end
