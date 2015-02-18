@@ -37,7 +37,13 @@ module SmartManagement
     private
 
     def resource_attributes
-      params.require(singular_model_name.to_sym).permit(editable_columns.map(&:to_sym))
+      params.require(singular_model_name.to_sym).permit(editable_columns_syms)
+    end
+
+    def editable_columns_syms
+      editable_columns.map do |column|
+        column.name.to_sym
+      end
     end
 
     def sort_options
