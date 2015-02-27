@@ -34,4 +34,15 @@ feature 'Manage users', type: :feature do
       expect(page).to have_content('Guirec Corbel2')
     end
   end
+
+  scenario 'Delete a user', js: true do
+    User.create!(name: 'Guirec Corbel', age: 29)
+
+    visit users_path
+    click_on 'Delete'
+
+    within('#users_table') do
+      expect(page).to_not have_content('Guirec Corbel')
+    end
+  end
 end
