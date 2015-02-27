@@ -1,4 +1,4 @@
-app = angular.module('smart_management', ['smart-table', 'restangular'])
+app = angular.module('smart_management', ['smart-table'])
 
 $(document).on 'page:load', ->
   angular.bootstrap $("[ng-app='#{app.name}']"), ['smart_management']
@@ -18,36 +18,25 @@ app.factory('RestManager', =>
       $("[ng-app='#{app.name}']").first().data('singular-model-name')
 )
 
-app.config ["RestangularProvider", (RestangularProvider) ->
-  RestangularProvider.addResponseInterceptor (data, operation) ->
-    extractedData = undefined
-    if operation == 'getList'
-      extractedData = data.items
-      extractedData.meta = data.meta
-    else
-      extractedData = data
-
-    extractedData
-]
-
 app.controller "sortCtrl", [
   "$scope"
   "$filter"
-  "Restangular"
+  "$http"
   "RestManager"
-  (scope, filter, Restangular, RestManager) ->
-    Restangular.setRequestSuffix('.json')
-
+  (scope, filter, http, RestManager) ->
+    window.scope = scope
     scope.callServer = (tableState) ->
       scope.rowCollection = []
-      Restangular.all(RestManager.pluralModelName()).getList(tableState).then (resources) ->
-        tableState.pagination.numberOfPages = Math.ceil(resources.meta.total / tableState.pagination.number)
-        $.each resources, (_, resource) ->
+      http.get("/#{RestManager.pluralModelName()}.json").success((data) =>
+        numberOfPages = data.meta.total / tableState.pagination.number
+        tableState.pagination.numberOfPages = Math.ceil(numberOfPages)
+        $.each data.items, (_, resource) ->
           addNewRow(resource)
+      )
 
     scope.showEdit = (row) ->
       scope.editedRow = row
-      scope.editedResource = row.resource.clone()
+      scope.editedResource = JSON.parse(JSON.stringify(row.resource))
 
       openFormModal('edit')
       return
@@ -62,29 +51,32 @@ app.controller "sortCtrl", [
 
     scope.submitEntry = ->
       if scope.editedResource["id"]
-        scope.editedResource.put().then( (resource) ->
+        http.put(
+          "/#{RestManager.pluralModelName()}/#{scope.editedResource.id}.json",
+           user: scope.editedResource
+        ).success((resource) =>
           scope.editedRow.resource = resource
           $('#formModal').modal('hide')
-        , (result) ->
+        ).error( (result) ->
+          console.log result
           showErrors result
         )
       else
         options = {}
         options[RestManager.singularModelName()] = scope.editedResource
-
-        Restangular.all(RestManager.pluralModelName())
-        .post(options).then((resource) ->
+        http.post("/#{RestManager.pluralModelName()}.json",
+          user: scope.editedResource
+        ).success((resource) =>
           addNewRow(resource)
           $('#formModal').modal('hide')
-        , (result) ->
+        ).error((result) ->
           showErrors result
         )
 
-
     scope.deleteEntry = (row) ->
-      row.resource.remove().then ->
-        scope.rowCollection = _.filter(scope.rowCollection, (item) ->
-          item != row
+      http.delete("/#{RestManager.pluralModelName()}/#{row.resource.id}.json").
+        success( =>
+          scope.rowCollection = _.filter(scope.rowCollection, (item) -> item != row)
         )
 
     openFormModal = (mode) ->

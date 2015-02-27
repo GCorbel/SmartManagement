@@ -16,5 +16,4 @@
 //= require underscore
 //= require angular
 //= require smart_table
-//= require restangular
 //= require smart_management
