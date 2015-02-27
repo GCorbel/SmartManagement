@@ -11,5 +11,12 @@ gemspec
 # your gem to rubygems.org.
 
 # To use a debugger
-# gem 'byebug', group: [:development, :test]
+gem 'jquery-rails'
+gem 'therubyracer', platforms: :ruby
+gem 'less-rails'
+gem 'coffee-rails', '~> 4.1.0'
+gem 'twitter-bootstrap-rails'
+gem 'angularjs-rails'
+gem 'underscore-rails'
+gem 'pry-byebug', group: [:development, :test]
 gem 'sqlite3'
