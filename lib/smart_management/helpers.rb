@@ -1,6 +1,8 @@
 module SmartManagement
   module Helpers
-    UNEDITABLE_COLUMNS = ['id', 'created_at', 'updated_at']
+    COLUMNS_AT_FIRST = ['id']
+    COLUMNS_AT_END = ['created_at', 'updated_at']
+    PROTECTED_COLUMNS = ['id', 'created_at', 'updated_at']
     UNSEARCHABLE_TYPES = [:string, :text]
 
     def smart_management_row(column)
@@ -10,17 +12,26 @@ module SmartManagement
       "{{row.resource.#{column.name} #{filter} }}"
     end
 
+    def visible_schema
+      {
+        singular_model_name.to_sym => {
+          only: visible_columns_names.map(&:to_sym)
+        }
+      }
+    end
+
     def visible_columns
       model_class.columns
     end
 
     def visible_columns_names
-      visible_columns.map(&:name)
+      COLUMNS_AT_FIRST + (visible_columns.map(&:name) - PROTECTED_COLUMNS) +
+        COLUMNS_AT_END
     end
 
     def editable_columns
       model_class.columns.reject do |column|
-        UNEDITABLE_COLUMNS.include?(column.name)
+        PROTECTED_COLUMNS.include?(column.name)
       end
     end
 

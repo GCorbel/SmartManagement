@@ -6,8 +6,7 @@ module SmartManagement
       respond_to do |format|
         format.html { render 'index' }
         format.json do
-          render json: SmartManagement::IndexBuilder.
-            new(model_class, smart_management_options).call
+          render json: convert_to_json(build_index)
         end
       end
     end
@@ -87,6 +86,15 @@ module SmartManagement
 
     def resource
       @resource ||= send(singular_model_name)
+    end
+
+    def build_index
+      SmartManagement::IndexBuilder.
+        new(model_class, smart_management_options).call
+    end
+
+    def convert_to_json(values)
+      JsonConverter.new(values, visible_schema).call
     end
   end
 end

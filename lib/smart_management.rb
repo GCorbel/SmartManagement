@@ -9,6 +9,7 @@ require 'smart_management/index_builder'
 require 'smart_management/searcher'
 require 'smart_management/paginer'
 require 'smart_management/sorter'
+require 'smart_management/json_converter'
 
 module SmartManagement
 end
