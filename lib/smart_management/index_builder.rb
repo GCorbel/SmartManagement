@@ -7,15 +7,20 @@ module SmartManagement
       @options = options
     end
 
-    def call
-      items = klass.all
-      items = Searcher.new(items, options[:search]).call
-      total = items.count
-
+    def items
+      items = searched_items
       items = Paginer.new(items, options[:pagination]).call
-      items = Sorter.new(items, options[:sort]).call
+      Sorter.new(items, options[:sort]).call
+    end
 
-      { items: items, meta: { total: total} }
+    def total
+      @total ||= searched_items.count
+    end
+
+    private
+
+    def searched_items
+      @seached_items ||= Searcher.new(klass.all, options[:search]).call
     end
   end
 end
