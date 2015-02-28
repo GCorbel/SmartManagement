@@ -5,9 +5,7 @@ module SmartManagement
     def index
       respond_to do |format|
         format.html { render 'index' }
-        format.json do
-          render json: convert_to_json(build_index)
-        end
+        format.json { render json: convert_to_json(build_index) }
       end
     end
 
