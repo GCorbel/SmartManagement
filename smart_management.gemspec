@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency "responders"
   s.add_dependency "simple_form"
   s.add_dependency "simple_form_angular"
+  s.add_dependency "angular_rails_csrf"
 
   s.add_development_dependency "rspec-rails"
   s.add_development_dependency "capybara"
