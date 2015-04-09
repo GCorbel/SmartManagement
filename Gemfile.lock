@@ -4,6 +4,7 @@ PATH
     smart_management (0.0.1)
       angular_rails_csrf
       decent_exposure
+      rabl
       rails (~> 4.2.0)
       responders
       simple_form
@@ -114,6 +115,8 @@ GEM
     pry-byebug (3.0.1)
       byebug (~> 3.4)
       pry (~> 0.10)
+    rabl (0.9.3)
+      activesupport (>= 2.3.14)
     rack (1.6.0)
     rack-test (0.6.3)
       rack (>= 1.0)

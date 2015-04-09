@@ -3,10 +3,6 @@ module SmartManagement
     include SmartManagement::Helpers
 
     def index
-      respond_to do |format|
-        format.html { render 'index' }
-        format.json { render json: json_values }
-      end
     end
 
     def show
@@ -76,6 +72,7 @@ module SmartManagement
       controller.expose(name, attributes: :resource_attributes)
       controller.expose(singular, attributes: :resource_attributes)
       controller.respond_to :html, :json
+      controller.helper_method :index_builder
     end
 
     def _prefixes

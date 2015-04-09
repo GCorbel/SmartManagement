@@ -30,8 +30,11 @@ app.controller "sortCtrl", [
       http.get("/#{RestManager.pluralModelName()}.json").success((data) =>
         numberOfPages = data.meta.total / tableState.pagination.number
         tableState.pagination.numberOfPages = Math.ceil(numberOfPages)
-        $.each data.items, (_, resource) ->
-          addNewRow(resource)
+
+        modelName = data.meta.pluralModelName
+
+        $.each data[modelName], (_, resource) ->
+          addNewRow(resource.user)
       )
 
     scope.showEdit = (row) ->
@@ -58,7 +61,6 @@ app.controller "sortCtrl", [
           scope.editedRow.resource = resource
           $('#formModal').modal('hide')
         ).error( (result) ->
-          console.log result
           showErrors result
         )
       else
@@ -98,8 +100,3 @@ app.controller "sortCtrl", [
         "#{fieldName} : #{messages.join()}"
       ).join('\n')
 ]
-
-app.directive "managerRow", ->
-  replace: true
-  template: $('#row').text()
-

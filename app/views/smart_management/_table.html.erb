@@ -18,7 +18,13 @@
   </tr>
 </thead>
 <tbody>
-  <tr id="{{row.id}}" manager-row ng-repeat="row in rowCollection"></tr>
+  <tr id="{{row.id}}" ng-repeat="row in rowCollection">
+    <% visible_columns.each do |column| %>
+       <td><%= smart_management_row(column) %></td>
+    <% end %>
+   <td><a href="javascript:" ng-click="showEdit(row)">Edit</a></td>
+   <td><a href="javascript:" ng-click="deleteEntry(row)">Delete</a></td>
+  </tr>
 </tbody>
 <tfoot>
   <tr>
