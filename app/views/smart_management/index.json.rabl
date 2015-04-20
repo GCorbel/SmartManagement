@@ -14,4 +14,5 @@ child(index_builder.items) do |items|
 end
 
 
-node(:meta) { { total: 10, pluralModelName: plural_model_name } }
+node(:meta) { { total: index_builder.items.length,
+                pluralModelName: plural_model_name } }
