@@ -21,11 +21,14 @@ module SmartManagement
     end
 
     def visible_columns
-      model_class.columns
+      schema = visible_schema[singular_model_name.to_sym][:only]
+      model_class.columns.select do |column|
+        schema.include? column.name.to_sym
+      end
     end
 
     def visible_columns_names
-      COLUMNS_AT_FIRST + (visible_columns.map(&:name) - PROTECTED_COLUMNS) +
+      COLUMNS_AT_FIRST + (model_class.columns.map(&:name) - PROTECTED_COLUMNS) +
         COLUMNS_AT_END
     end
 
