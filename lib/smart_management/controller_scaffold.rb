@@ -3,6 +3,10 @@ module SmartManagement
     include SmartManagement::Helpers
 
     def index
+      respond_to do |format|
+        format.html { render 'index' }
+        format.json { render json: json_values }
+      end
     end
 
     def show
@@ -16,7 +20,7 @@ module SmartManagement
 
     def update
       if resource.save
-        render json: resource, status: :ok
+        render json: resource.as_json(json_options), status: :ok
       else
         render json: { errors: resource.errors }, status: :unprocessable_entity
       end
@@ -72,7 +76,6 @@ module SmartManagement
       controller.expose(name, attributes: :resource_attributes)
       controller.expose(singular, attributes: :resource_attributes)
       controller.respond_to :html, :json
-      controller.helper_method :index_builder
     end
 
     def _prefixes
@@ -85,11 +88,11 @@ module SmartManagement
 
     def index_builder
       SmartManagement::IndexBuilder.
-        new(model_class, smart_management_options)
+        new(scope, smart_management_options)
     end
 
     def json_values
-      JsonConverter.new(index_builder, visible_schema).call
+      JsonConverter.new(index_builder, json_options).call
     end
   end
 end

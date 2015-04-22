@@ -10,6 +10,7 @@
         <% editable_columns.each do |column| %>
           <%= field_for form: form, klass: model_class, column: column %>
         <% end %>
+        <%= yield(form) %>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

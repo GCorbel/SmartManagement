@@ -12,23 +12,17 @@ module SmartManagement
       "{{row.resource.#{column.name} #{filter} }}"
     end
 
-    def visible_schema
-      {
-        singular_model_name.to_sym => {
-          only: visible_columns_names.map(&:to_sym)
-        }
-      }
+    def json_options
+      {}
     end
 
     def visible_columns
-      schema = visible_schema[singular_model_name.to_sym][:only]
-      model_class.columns.select do |column|
-        schema.include? column.name.to_sym
-      end
+      model_class.columns.select { |c| visible_columns_names.include? c.name }
     end
 
     def visible_columns_names
-      COLUMNS_AT_FIRST + (model_class.columns.map(&:name) - PROTECTED_COLUMNS) +
+      COLUMNS_AT_FIRST +
+        (model_class.columns.map(&:name) - PROTECTED_COLUMNS) +
         COLUMNS_AT_END
     end
 
@@ -69,6 +63,10 @@ module SmartManagement
 
     def searchable?(column)
       UNSEARCHABLE_TYPES.include?(column.type)
+    end
+
+    def scope
+      model_class
     end
 
     private

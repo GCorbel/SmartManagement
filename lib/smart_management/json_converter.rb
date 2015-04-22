@@ -8,7 +8,7 @@ class JsonConverter
 
   def call
     hash = {}
-    hash[:items] = data.items.as_json(schema[schema.keys.first])
+    hash[:items] = data.items.as_json(schema)
     hash[:meta] = { total: data.total }
     hash.to_json
   end

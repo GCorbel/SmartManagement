@@ -1,10 +1,12 @@
+<%= render 'smart_management/row' %>
+
 <div ng-controller="sortCtrl" ng-app="smart_management"
   data-singular-model-name = "<%= singular_model_name %>"
   data-plural-model-name = "<%= plural_model_name %>"
   data-editable-columns="<%= editable_columns_names.join(',') %>"
   data-visible-columns="<%= visible_columns_names.join(',') %>">
 
-  <%= render 'smart_management/form' %>
+  <%= render 'form' %>
   <%= render 'smart_management/table' %>
 
   <a href="javascript:" ng-click="showNew()">Add a new</a>

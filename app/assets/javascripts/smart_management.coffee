@@ -27,15 +27,13 @@ app.controller "sortCtrl", [
     window.scope = scope
     scope.callServer = (tableState) ->
       scope.rowCollection = []
-      http.get("/#{RestManager.pluralModelName()}.json").success((data) =>
-        numberOfPages = data.meta.total / tableState.pagination.number
-        tableState.pagination.numberOfPages = Math.ceil(numberOfPages)
-
-        modelName = data.meta.pluralModelName
-
-        $.each data[modelName], (_, resource) ->
-          addNewRow(resource.user)
-      )
+      http.get("/#{RestManager.pluralModelName()}.json", params: tableState).
+        success((data) =>
+          numberOfPages = data.meta.total / tableState.pagination.number
+          tableState.pagination.numberOfPages = Math.ceil(numberOfPages)
+          $.each data.items, (_, resource) ->
+            addNewRow(resource)
+        )
 
     scope.showEdit = (row) ->
       scope.editedRow = row
@@ -54,20 +52,25 @@ app.controller "sortCtrl", [
 
     scope.submitEntry = ->
       if scope.editedResource["id"]
+
+        options = {}
+        options[RestManager.singularModelName()] = scope.editedResource
+
         http.put(
           "/#{RestManager.pluralModelName()}/#{scope.editedResource.id}.json",
-           user: scope.editedResource
+          options
         ).success((resource) =>
           scope.editedRow.resource = resource
           $('#formModal').modal('hide')
         ).error( (result) ->
+          console.log result
           showErrors result
         )
       else
         options = {}
         options[RestManager.singularModelName()] = scope.editedResource
         http.post("/#{RestManager.pluralModelName()}.json",
-          user: scope.editedResource
+          options
         ).success((resource) =>
           addNewRow(resource)
           $('#formModal').modal('hide')
@@ -100,3 +103,8 @@ app.controller "sortCtrl", [
         "#{fieldName} : #{messages.join()}"
       ).join('\n')
 ]
+
+app.directive "managerRow", ->
+  replace: true
+  template: $('#row').text()
+

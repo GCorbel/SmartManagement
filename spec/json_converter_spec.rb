@@ -7,7 +7,7 @@ describe JsonConverter do
       total = 2
 
       data = double(items: items, total: total)
-      schema = { user: { only: [:id] } }
+      schema = { only: [:id] }
 
       actual = JsonConverter.new(data, schema).call
       expected = "{\"items\":[{\"id\":1},{\"id\":2}],\"meta\":{\"total\":2}}"
