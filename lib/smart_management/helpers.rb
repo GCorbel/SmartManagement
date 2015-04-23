@@ -6,7 +6,7 @@ module SmartManagement
     UNSEARCHABLE_TYPES = [:string, :text]
 
     def smart_management_row(column)
-      if column.sql_type == 'datetime'
+      if column.sql_type.include?('time')
         filter = " | date: 'dd-MM-yyyy hh:mm:ss'"
       end
       "{{row.resource.#{column.name} #{filter} }}"
