@@ -21,6 +21,7 @@ app.controller "sortCtrl", [
       scope.rowCollection = []
       http.get("/#{RestManager.pluralModelName()}.json", params: tableState).
         success((data) =>
+          scope.rowCollection = []
           numberOfPages = data.meta.total / tableState.pagination.number
           tableState.pagination.numberOfPages = Math.ceil(numberOfPages)
           $.each data.items, (_, resource) ->
