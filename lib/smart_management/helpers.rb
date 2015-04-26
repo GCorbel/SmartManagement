@@ -54,10 +54,9 @@ module SmartManagement
 
     def field_for(form:, klass:, column:)
       if klass.reflect_on_association(assoc_name(column.name))
-        form.send(:association, assoc_name(column.name),
-                  ng: { model: "editedResource.#{column.name}" } )
+        form.send(:association, assoc_name(column.name))
       else
-        form.send(:input, column.name, ng: { model: "editedResource.#{column.name}" } )
+        form.send(:input, column.name)
       end
     end
 
