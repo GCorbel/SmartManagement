@@ -47,7 +47,3 @@ app.controller "sortCtrl", [
           row.resource = resource
       scope.$apply() unless scope.$$phase
 ]
-
-app.directive "managerRow", ->
-  replace: true
-  template: $('#row').text()
