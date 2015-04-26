@@ -11,6 +11,34 @@ Add it to your Gemfile :
 gem 'smart_management'
 ```
 
+You have to include those dependencies in `application.js` :
+
+```coffee
+//= require jquery
+//= require jquery_ujs
+//= require turbolinks
+//= require twitter/bootstrap
+//= require underscore
+//= require angular
+//= require smart_table
+//= require smart_management
+```
+
+And you have to add this in `application.css` :
+```css
+ *= require bootstrap_and_overrides
+```
+
+You also have to download Smart-Table with this command :
+```
+wget https://raw.githubusercontent.com/lorenzofox3/Smart-Table/master/dist/smart-table.js -O app/assets/javascripts/smart-table.js
+```
+
+Finally, you have to generate the simple_form installation with this command :
+```
+rails g simple_form:install --bootstrap
+```
+
 ## How to use
 
 Now, you can create a new controller, as you do in a normal Rails application.

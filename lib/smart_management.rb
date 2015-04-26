@@ -10,5 +10,11 @@ require 'smart_management/paginer'
 require 'smart_management/sorter'
 require 'smart_management/json_converter'
 
+require 'therubyracer'
+require 'angularjs-rails'
+require 'underscore-rails'
+require 'twitter-bootstrap-rails'
+require 'less-rails'
+
 module SmartManagement
 end
