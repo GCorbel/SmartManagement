@@ -1,7 +1,6 @@
 require 'decent_exposure'
 require 'responders'
 require 'simple_form'
-require 'simple_form_angular'
 require 'smart_management/helpers'
 require 'smart_management/controller_scaffold'
 require 'smart_management/engine'
