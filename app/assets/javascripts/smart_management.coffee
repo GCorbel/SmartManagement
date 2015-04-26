@@ -5,17 +5,8 @@ $(document).on 'page:load', ->
 
 app.factory('RestManager', =>
   class RestManager
-    @editableColumns = =>
-      $("[ng-app='#{app.name}']").first().data('editable-columns').split(',')
-
-    @visibleColumns = =>
-      $("[ng-app='#{app.name}']").first().data('visible-columns').split(',')
-
     @pluralModelName = =>
       $("[ng-app='#{app.name}']").first().data('plural-model-name')
-
-    @singularModelName = =>
-      $("[ng-app='#{app.name}']").first().data('singular-model-name')
 )
 
 app.controller "sortCtrl", [
@@ -25,6 +16,7 @@ app.controller "sortCtrl", [
   "RestManager"
   (scope, filter, http, RestManager) ->
     window.scope = scope
+    scope.new_path = "/#{RestManager.pluralModelName()}/new"
     scope.callServer = (tableState) ->
       scope.rowCollection = []
       http.get("/#{RestManager.pluralModelName()}.json", params: tableState).
@@ -32,79 +24,30 @@ app.controller "sortCtrl", [
           numberOfPages = data.meta.total / tableState.pagination.number
           tableState.pagination.numberOfPages = Math.ceil(numberOfPages)
           $.each data.items, (_, resource) ->
-            addNewRow(resource)
-        )
-
-    scope.showEdit = (row) ->
-      scope.editedRow = row
-      scope.editedResource = JSON.parse(JSON.stringify(row.resource))
-
-      openFormModal('edit')
-      return
-
-    scope.showNew = ->
-      scope.editedResource = {}
-      $.each RestManager.editableColumns(), (column) ->
-        scope.editedResource[column] = ''
-
-      openFormModal('new')
-      return
-
-    scope.submitEntry = ->
-      if scope.editedResource["id"]
-
-        options = {}
-        options[RestManager.singularModelName()] = scope.editedResource
-
-        http.put(
-          "/#{RestManager.pluralModelName()}/#{scope.editedResource.id}.json",
-          options
-        ).success((resource) =>
-          scope.editedRow.resource = resource
-          $('#formModal').modal('hide')
-        ).error( (result) ->
-          console.log result
-          showErrors result
-        )
-      else
-        options = {}
-        options[RestManager.singularModelName()] = scope.editedResource
-        http.post("/#{RestManager.pluralModelName()}.json",
-          options
-        ).success((resource) =>
-          addNewRow(resource)
-          $('#formModal').modal('hide')
-        ).error((result) ->
-          showErrors result
+            scope.addNewRow(resource)
         )
 
     scope.deleteEntry = (row) ->
       http.delete("/#{RestManager.pluralModelName()}/#{row.resource.id}.json").
         success( =>
-          scope.rowCollection = _.filter(scope.rowCollection, (item) -> item != row)
+          scope.rowCollection = _.filter(scope.rowCollection,
+            (item) -> item != row)
         )
 
-    openFormModal = (mode) ->
-      $('#formModal').modal()
-      $('#formModal form').removeAttr('action')
-      if mode == 'edit'
-        $('#formModalLabel').html("Edit #{scope.editedResource.id}")
-      else
-        $('#formModalLabel').html('Add a new')
-
-    addNewRow = (resource) ->
+    scope.addNewRow = (resource) ->
       row = {}
       row.resource = resource
-      row.editUrl = "/#{RestManager.pluralModelName}/#{resource.id}"
+      row.editUrl = "/#{RestManager.pluralModelName()}/#{resource.id}/edit"
       scope.rowCollection.push(row)
+      scope.$apply() unless scope.$$phase
 
-    showErrors = (result) ->
-      alert $.map(result.data.errors, (messages, fieldName) ->
-        "#{fieldName} : #{messages.join()}"
-      ).join('\n')
+    scope.updateRow = (resource) ->
+      $.each scope.rowCollection, (_, row) ->
+        if row.resource.id == resource.id
+          row.resource = resource
+      scope.$apply() unless scope.$$phase
 ]
 
 app.directive "managerRow", ->
   replace: true
   template: $('#row').text()
-

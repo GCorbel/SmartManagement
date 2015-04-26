@@ -1,0 +1,6 @@
+<% if resource.valid? %>
+  $('#formContainer').modal('hide')
+  window.scope.addNewRow(<%= (resource.to_json(json_options).html_safe) %>)
+<% else %>
+  $('#formContainer').html('<%= j(render('form', resource: resource)) %>')
+<% end %>

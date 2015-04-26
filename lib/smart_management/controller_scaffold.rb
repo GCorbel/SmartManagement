@@ -14,16 +14,11 @@ module SmartManagement
     end
 
     def create
-      resource.save
-      respond_with(resource)
+      resource.save if resource.valid?
     end
 
     def update
-      if resource.save
-        render json: resource.as_json(json_options), status: :ok
-      else
-        render json: { errors: resource.errors }, status: :unprocessable_entity
-      end
+      resource.save if resource.valid?
     end
 
     def destroy
@@ -75,6 +70,7 @@ module SmartManagement
       singular = name.singularize
       controller.expose(name, attributes: :resource_attributes)
       controller.expose(singular, attributes: :resource_attributes)
+      controller.helper_method :resource
       controller.respond_to :html, :json
     end
 

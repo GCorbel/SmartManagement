@@ -27,7 +27,7 @@ feature 'Manage users', type: :feature do
     click_on 'Add a new'
     fill_in 'Name', with: 'Guirec Corbel'
     fill_in 'Age', with: 29
-    click_on 'Save changes'
+    click_on 'Create User'
 
     within('#users_table') do
       expect(page).to have_content('Guirec Corbel')
@@ -40,7 +40,7 @@ feature 'Manage users', type: :feature do
     visit users_path
     click_on 'Edit'
     fill_in 'Name', with: 'Guirec Corbel2'
-    click_on 'Save changes'
+    click_on 'Update User'
 
     within('#users_table') do
       expect(page).to have_content('Guirec Corbel2')
