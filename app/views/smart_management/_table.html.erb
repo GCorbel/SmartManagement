@@ -32,7 +32,7 @@
     <% visible_columns.each do |column| %>
       <td>
         <% if searchable?(column) %>
-          <input st-search="'<%= column.name %>'"/>
+          <input st-search="<%= column.name %>"/>
         <% end %>
       </td>
     <% end %>
