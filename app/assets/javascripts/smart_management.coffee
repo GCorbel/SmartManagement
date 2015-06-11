@@ -28,6 +28,9 @@ app.controller "sortCtrl", [
             scope.addNewRow(resource)
         )
 
+    scope.changeNumberOfPages = (number) ->
+      console.log number
+
     scope.deleteEntry = (row) ->
       http.delete("/#{RestManager.pluralModelName()}/#{row.resource.id}.json").
         success( =>

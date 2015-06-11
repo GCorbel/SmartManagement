@@ -1,6 +1,24 @@
 <table id="<%= plural_model_name %>_table" st-table="rowCollection"
   st-pipe="callServer" class="table table-striped">
 <thead>
+
+  <tr>
+    <td class="text-center" colspan="<%= colspan %>">
+      <div class="form-group col-md-2">
+        <label>Items Per Page:</label>
+        <select class="form-control" ng-model="itemsByPage">
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+          <option value="1000">1000</option>
+          <option value="10000">10000</option>
+        </select>
+      </div>
+      <div class="text-center" st-pagination="" st-items-by-page="itemsByPage" colspan="<%= colspan %>"></div>
+    </td>
+  </tr>
+
   <tr>
     <% visible_columns.each do |column| %>
       <th st-sort="<%= column.name %>">
@@ -30,10 +48,23 @@
   </tr>
 </tbody>
 <tfoot>
+
   <tr>
-    <td class="text-center" st-pagination="" st-items-by-page="25"
-                                             colspan="<%= colspan %>">
+    <td class="text-center" colspan="<%= colspan %>">
+      <div class="form-group col-md-2">
+        <label>Items Per Page:</label>
+        <select class="form-control" ng-model="itemsByPage">
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+          <option value="1000">1000</option>
+          <option value="10000">10000</option>
+        </select>
+      </div>
+      <div class="text-center" st-pagination="" st-items-by-page="itemsByPage" colspan="<%= colspan %>"></div>
     </td>
   </tr>
+
 </tfoot>
 </table>
